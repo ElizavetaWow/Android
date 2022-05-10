@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Списки дел</string>
+    <string name="description">Списки дел по категориям</string>
+    <string name="home_tasks">Дом</string>
+    <string name="study_tasks">Учёба</string>
+    <string name="other_tasks">Общий</string>
+    <string name="header">Список</string>
+    <string name="add_text">Добавить</string>
+    <string name="add_hint">Дело</string>
+</resources>
