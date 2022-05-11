@@ -5,49 +5,73 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
+import java.util.concurrent.TimeUnit;
+
 public class MyService extends Service {
-    NotificationManager nm;
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+    public void startNotificationListener() {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ShowNotification();
+            }
+        }).start();
     }
-
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d("tag", "yes");
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("Title")
-                .setContentText("Text");
-        Notification notif = builder.build();
-        //Notification notif = new Notification(R.mipmap.ic_launcher, "Text in status bar",
-        //        System.currentTimeMillis());
-        //Intent intent2 = new Intent(this, MainActivity.class);
-        //PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent2, 0);
-
-        //notif.setLatestEventInfo(this, "Notification's title", "Notification's text", pIntent);
-
-        // ставим флаг, чтобы уведомление пропало после нажатия
-        notif.flags |= Notification.FLAG_AUTO_CANCEL;
-        Log.d("tag", String.valueOf(notif));
-        // отправляем
-        nm.notify(1, notif);
-        return super.onStartCommand(intent, flags, startId);
+    public void onCreate()
+    {
+        startNotificationListener();
+        super.onCreate();
+    }
+    @Override
+    public int onStartCommand(Intent intent,int flags,int startId)
+    {
+        return super.onStartCommand(intent,flags,startId);
+    }
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
     }
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+    public void ShowNotification() {
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Service.NOTIFICATION_SERVICE);
+
+        Intent intent1 = new Intent(getApplicationContext(), MainActivity2.class);
+        intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        PendingIntent pendingIntent1 = PendingIntent.getActivity(getApplicationContext(),
+                1, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Intent intent2 = new Intent(getApplicationContext(), MainActivity3.class);
+        intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        PendingIntent pendingIntent2 = PendingIntent.getActivity(getApplicationContext(),
+                1, intent2, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Notification notification = new NotificationCompat.Builder(getBaseContext(),"notification_id")
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("Уведомление")
+                .setContentText("Выберите активность")
+                .setDefaults(NotificationCompat.DEFAULT_SOUND)
+                .addAction(R.mipmap.ic_launcher, "Первая активность", pendingIntent1)
+                .addAction(R.mipmap.ic_launcher, "Вторая активность", pendingIntent2)
+                .build();
+
+        notificationManager.notify(0, notification);
     }
 
 }

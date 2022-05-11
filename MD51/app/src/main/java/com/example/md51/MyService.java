@@ -30,6 +30,7 @@ public class MyService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         Log.d("LOG_TAG","onBind");
+        Toast.makeText(this, "My service binding", Toast.LENGTH_SHORT).show();
         return null;
     }
 

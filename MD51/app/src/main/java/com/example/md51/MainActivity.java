@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
-    Button btnStart, btnBind;
     boolean bound = false;
     ServiceConnection sConn;
 
@@ -40,6 +39,10 @@ public class MainActivity extends AppCompatActivity {
             case R.id.btnBind:
                 Intent intent1 = new Intent(this, MyService.class);
                 bindService(intent1, sConn,BIND_AUTO_CREATE);
+                break;
+            case R.id.btnUnBind:
+                unbindService(sConn);
+                break;
             default:
                 break;
         }
